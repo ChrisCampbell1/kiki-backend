@@ -1,5 +1,5 @@
 import { Profile } from '../models/profile.js'
-import { Event } from '../models/event'
+import { Event } from '../models/event.js'
 
 const index = async (req, res) => {
   try {
@@ -29,7 +29,9 @@ const show = async (req, res) => {
 
 const create = async (req, res) => {
   try {
+    req.body.host = req.user.profile
     const event = await Event.create(req.body)
+    event.populate('host') //todo needs work
     res.status(200).json(event)
   } catch (error) {
     console.log(error)

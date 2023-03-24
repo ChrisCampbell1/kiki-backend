@@ -20,7 +20,8 @@ const eventSchema = new Schema({
   geoLocation: [Number],
   address: String,
   accessNotes: String,
-  comments: [commentSchema]
+  comments: [commentSchema],
+  status: { type: String, enum: ['Scheduled', 'In Progress', 'Over'] },
 },{
   timestamps: true,
 })
