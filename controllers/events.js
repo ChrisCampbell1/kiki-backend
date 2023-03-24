@@ -7,6 +7,7 @@ const index = async (req, res) => {
       .populate('host')
       .populate('pendingGuests')
       .populate('approvedGuests')
+      .populate('comments.author', ['name', 'photo'])
     res.status(200).json(events)
   } catch (error) {
     console.log(error)
@@ -20,6 +21,7 @@ const show = async (req, res) => {
       .populate('host')
       .populate('pendingGuests')
       .populate('approvedGuests')
+      .populate('comments.author', ['name', 'photo'])
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
@@ -31,7 +33,6 @@ const create = async (req, res) => {
   try {
     req.body.host = req.user.profile
     const event = await Event.create(req.body)
-    event.populate('host') //todo needs work
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
