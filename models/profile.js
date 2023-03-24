@@ -4,7 +4,13 @@ const Schema = mongoose.Schema
 
 const profileSchema = new Schema({
   name: String,
-  photo: String
+  photo: String,
+  bio: String,
+  age: Number,
+  homeCity: String,
+  interests: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
+  events: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
+  location: [Number]
 },{
   timestamps: true,
 })
