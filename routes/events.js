@@ -13,7 +13,6 @@ router.get('/:id', checkAuth, eventsCtrl.show)
 router.post('/', checkAuth, eventsCtrl.create)
 router.post('/:id/comments', checkAuth, eventsCtrl.createComment)
 router.put('/:id', checkAuth, eventsCtrl.update)
-router.put('/:id/comments/:commentId', checkAuth, eventsCtrl.updateComment)
 router.delete('/:id', checkAuth, eventsCtrl.delete)
 router.delete('/:id/comments/:commentId', checkAuth, eventsCtrl.deleteComment)
 
