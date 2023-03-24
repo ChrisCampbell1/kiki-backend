@@ -33,6 +33,8 @@ const create = async (req, res) => {
   try {
     req.body.host = req.user.profile
     const event = await Event.create(req.body)
+    const profile = await Profile.findById(req.body.host)
+    profile.events.push(event._id)//todo needs work
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
