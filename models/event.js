@@ -12,7 +12,7 @@ const commentSchema = new Schema({
 const eventSchema = new Schema({
   title: String,
   description: String,
-  category: { type: String, enum: ['Gaming', 'Party', 'Media', 'Fitness', 'Arts', 'Food', 'Sports'] },
+  category: { type: String, enum: ['Gaming', 'Party', 'Media', 'Fitness', 'Arts', 'Food', 'Sports', 'Other'] },
   date: Date,
   host: { type: Schema.Types.ObjectId, ref: 'Profile' },
   pendingGuests: [{ type: Schema.Types.ObjectId, ref: 'Profile' }],
