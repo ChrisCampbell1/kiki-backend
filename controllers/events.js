@@ -34,7 +34,10 @@ const create = async (req, res) => {
     req.body.host = req.user.profile
     const event = await Event.create(req.body)
     const profile = await Profile.findById(req.body.host)
-    profile.events.push(event._id)//todo needs work
+    profile.events.push(event._id)
+    profile.save()
+    event.approvedGuests.push(req.body.host)
+    event.save()
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
