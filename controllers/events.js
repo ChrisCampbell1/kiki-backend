@@ -11,7 +11,7 @@ const index = async (req, res) => {
     res.status(200).json(events)
   } catch (error) {
     console.log(error)
-    res.status(500).json(err)
+    res.status(500).json(error)
   }
 }
 
@@ -25,7 +25,7 @@ const show = async (req, res) => {
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
-    res.status(500).json(err)
+    res.status(500).json(error)
   }
 }
 
@@ -41,7 +41,7 @@ const create = async (req, res) => {
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
-    res.status(500).json(err)
+    res.status(500).json(error)
   }
 }
 
@@ -51,7 +51,7 @@ const update = async (req, res) => {
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
-    res.status(500).json(err)
+    res.status(500).json(error)
   }
 }
 
@@ -61,7 +61,7 @@ const deleteEvent = async (req, res) => {
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
-    res.status(500).json(err)
+    res.status(500).json(error)
   }
 }
 
@@ -74,7 +74,7 @@ const createComment = async (req, res) => {
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
-    res.status(500).json(err)
+    res.status(500).json(error)
   }
 }
 
@@ -86,7 +86,37 @@ const deleteComment = async (req, res) => {
     res.status(200).json(event)
   } catch (error) {
     console.log(error)
-    res.status(500).json(err)
+    res.status(500).json(error)
+  }
+}
+
+const requestInvite = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id)
+    if(event.pendingGuests.includes(req.user.profile)) {
+      res.status(200).json(event)
+    } else {
+      event.pendingGuests.push(req.user.profile)
+      event.save()
+      res.status(200).json(event)
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error)
+  }
+}
+
+const approveInvite = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id)
+    event.pendingGuests = event.pendingGuests.filter((guest) => guest !== req.params.guestId)
+    event.save()
+    event.approvedGuests.push(req.params.guestId)
+    event.save()
+    res.status(200).json(event)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error)
   }
 }
 
@@ -97,5 +127,7 @@ export {
   update,
   deleteEvent as delete,
   createComment,
-  deleteComment
+  deleteComment,
+  requestInvite,
+  approveInvite
 }
