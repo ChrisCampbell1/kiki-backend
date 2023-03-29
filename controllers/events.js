@@ -109,11 +109,10 @@ const requestInvite = async (req, res) => {
 const approveInvite = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
-    if(event.host !== req.user.profile) {
+    if (event.approvedGuests.includes(req.params.guestId)) {
       res.status(200).json(event)
     } else {
-      event.pendingGuests = event.pendingGuests.filter((guest) => guest !== req.params.guestId)
-      event.save()
+      event.pendingGuests.pull(req.params.guestId)
       event.approvedGuests.push(req.params.guestId)
       event.save()
       res.status(200).json(event)
