@@ -33,12 +33,17 @@ const create = async (req, res) => {
   try {
     req.body.host = req.user.profile
     const event = await Event.create(req.body)
+    const newEvent = await Event.findById(event._id)
+      .populate('host')
+      .populate('pendingGuests')
+      .populate('approvedGuests')
+      .populate('comments.author', ['name', 'photo'])
     const profile = await Profile.findById(req.body.host)
     profile.events.push(event._id)
     profile.save()
     event.approvedGuests.push(req.body.host)
     event.save()
-    res.status(200).json(event)
+    res.status(200).json(newEvent)
   } catch (error) {
     console.log(error)
     res.status(500).json(error)
@@ -93,6 +98,10 @@ const deleteComment = async (req, res) => {
 const requestInvite = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
+      .populate('host')
+      .populate('pendingGuests')
+      .populate('approvedGuests')
+      .populate('comments.author', ['name', 'photo'])
     if(event.pendingGuests.includes(req.user.profile)) {
       res.status(200).json(event)
     } else {
@@ -109,6 +118,10 @@ const requestInvite = async (req, res) => {
 const approveInvite = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
+      .populate('host')
+      .populate('pendingGuests')
+      .populate('approvedGuests')
+      .populate('comments.author', ['name', 'photo'])
     if (event.approvedGuests.includes(req.params.guestId)) {
       res.status(200).json(event)
     } else {
@@ -117,6 +130,23 @@ const approveInvite = async (req, res) => {
       event.save()
       res.status(200).json(event)
     }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error)
+  }
+}
+
+const removeInvite = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id)
+      .populate('host')
+      .populate('pendingGuests')
+      .populate('approvedGuests')
+      .populate('comments.author', ['name', 'photo'])
+    event.approvedGuests.pull(req.params.guestId)
+    event.pendingGuests.push(req.params.guestId)
+    event.save()
+    res.status(200).json(event)
   } catch (error) {
     console.log(error)
     res.status(500).json(error)
@@ -132,5 +162,6 @@ export {
   createComment,
   deleteComment,
   requestInvite,
-  approveInvite
+  approveInvite,
+  removeInvite
 }

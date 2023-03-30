@@ -15,6 +15,7 @@ router.post('/:id/comments', checkAuth, eventsCtrl.createComment)
 router.put('/:id', checkAuth, eventsCtrl.update)
 router.put('/:id/requestInvite', checkAuth, eventsCtrl.requestInvite)
 router.put('/:id/approveInvite/:guestId', checkAuth, eventsCtrl.approveInvite)
+router.put('/:id/removeInvite/:guestId', checkAuth, eventsCtrl.removeInvite)
 router.delete('/:id', checkAuth, eventsCtrl.delete)
 router.delete('/:id/comments/:commentId', checkAuth, eventsCtrl.deleteComment)
 
