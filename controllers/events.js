@@ -118,16 +118,12 @@ const requestInvite = async (req, res) => {
 const approveInvite = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
-      // .populate('host')
-      // .populate('pendingGuests')
-      // .populate('approvedGuests')
-      // .populate('comments.author', ['name', 'photo'])
     if (event.approvedGuests.includes(req.params.guestId)) {
       res.status(200).json(event)
     } else {
       event.pendingGuests.pull(req.params.guestId)
       event.approvedGuests.push(req.params.guestId)
-      event.save()
+      await event.save()
       const updatedEvent = await Event.findById(req.params.id)
         .populate('host')
         .populate('pendingGuests')
@@ -144,13 +140,9 @@ const approveInvite = async (req, res) => {
 const removeInvite = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
-      // .populate('host')
-      // .populate('pendingGuests')
-      // .populate('approvedGuests')
-      // .populate('comments.author', ['name', 'photo'])
     event.approvedGuests.pull(req.params.guestId)
     event.pendingGuests.push(req.params.guestId)
-    event.save()
+    await event.save()
     const updatedEvent = await Event.findById(req.params.id)
       .populate('host')
       .populate('pendingGuests')
